@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Helpdesk System - Login Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .user-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background-color: #ecf0f1;
+        }
+        .support-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            background-color: #fdf2f2;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .support-btn {
+            background-color: #e74c3c;
+        }
+        .support-btn:hover {
+            background-color: #c0392b;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .quick-links {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .quick-links a {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .quick-links a:hover {
+            background-color: #5a6268;
+        }
+        .token-display {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 IT Helpdesk System - Login Test</h1>
+        
+        <div class="user-section">
+            <h2>👤 Regular User Login</h2>
+            <p><strong>Permissions:</strong> Chat, View Analytics, Own Tickets</p>
+            <div class="form-group">
+                <label for="userUsername">Username:</label>
+                <input type="text" id="userUsername" value="appuser" readonly>
+            </div>
+            <div class="form-group">
+                <label for="userPassword">Password:</label>
+                <input type="password" id="userPassword" value="password123" readonly>
+            </div>
+            <button onclick="loginUser()">Login as Regular User</button>
+            <button onclick="testUserPermissions()">Test User Permissions</button>
+        </div>
+
+        <div class="support-section">
+            <h2>🔧 Support Engineer Login</h2>
+            <p><strong>Permissions:</strong> All User Permissions + View All Tickets + Update Tickets</p>
+            <div class="form-group">
+                <label for="supportUsername">Username:</label>
+                <input type="text" id="supportUsername" value="support-engineer" readonly>
+            </div>
+            <div class="form-group">
+                <label for="supportPassword">Password:</label>
+                <input type="password" id="supportPassword" value="support123" readonly>
+            </div>
+            <button class="support-btn" onclick="loginSupport()">Login as Support Engineer</button>
+            <button class="support-btn" onclick="testSupportPermissions()">Test Support Permissions</button>
+        </div>
+
+        <div id="result" class="result info" style="display: none;"></div>
+
+        <div class="quick-links">
+            <h3>🌐 Quick Access Links</h3>
+            <a href="http://localhost:8501" target="_blank">Chat Interface</a>
+            <a href="http://localhost:8502" target="_blank">Dashboard</a>
+            <a href="http://localhost:8000/docs" target="_blank">API Documentation</a>
+            <a href="http://localhost:8000/health" target="_blank">Health Check</a>
+        </div>
+
+        <div class="info">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Login:</strong> Click login buttons to authenticate</li>
+                <li><strong>Test Permissions:</strong> Click test buttons to verify access</li>
+                <li><strong>Copy Token:</strong> Use the JWT token for API testing</li>
+                <li><strong>API Docs:</strong> Go to /docs, click "Authorize", enter "Bearer YOUR_TOKEN"</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = '';
+
+        async function loginUser() {
+            showResult('Logging in as regular user...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:8000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'appuser',
+                        password: 'password123'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentToken = data.access_token;
+                    showResult(`✅ Login Successful!
+
+👤 User Details:
+Username: ${data.user.username}
+Role: ${data.user.role}
+Full Name: ${data.user.full_name}
+Email: ${data.user.email}
+Last Login: ${data.user.last_login}
+
+🔑 Access Token (for API testing):
+${data.access_token}
+
+💡 Copy this token and use it in API docs:
+1. Go to http://localhost:8000/docs
+2. Click "Authorize" button
+3. Enter: Bearer ${data.access_token}`, 'success');
+                } else {
+                    showResult(`❌ Login Failed: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function loginSupport() {
+            showResult('Logging in as support engineer...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:8000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'support-engineer',
+                        password: 'support123'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentToken = data.access_token;
+                    showResult(`✅ Login Successful!
+
+🔧 Support Engineer Details:
+Username: ${data.user.username}
+Role: ${data.user.role}
+Full Name: ${data.user.full_name}
+Email: ${data.user.email}
+Last Login: ${data.user.last_login}
+
+🔑 Access Token (for API testing):
+${data.access_token}
+
+💡 Copy this token and use it in API docs:
+1. Go to http://localhost:8000/docs
+2. Click "Authorize" button
+3. Enter: Bearer ${data.access_token}`, 'success');
+                } else {
+                    showResult(`❌ Login Failed: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testUserPermissions() {
+            if (!currentToken) {
+                showResult('❌ Please login first!', 'error');
+                return;
+            }
+
+            showResult('Testing regular user permissions...', 'info');
+            
+            try {
+                // Test chat
+                const chatResponse = await fetch('http://localhost:8000/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({
+                        content: 'Test message from web interface',
+                        user_id: 'web_test'
+                    })
+                });
+
+                // Test analytics
+                const analyticsResponse = await fetch('http://localhost:8000/analytics/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                // Test restricted endpoint (should fail)
+                const ticketsResponse = await fetch('http://localhost:8000/tickets/all', {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                let result = '📋 Regular User Permission Test Results:\n\n';
+                
+                if (chatResponse.ok) {
+                    const chatData = await chatResponse.json();
+                    result += `✅ Chat Access: Working\n   Agent: ${chatData.agent}\n   Response: ${chatData.response.substring(0, 100)}...\n\n`;
+                } else {
+                    result += `❌ Chat Access: Failed\n\n`;
+                }
+
+                if (analyticsResponse.ok) {
+                    const analyticsData = await analyticsResponse.json();
+                    result += `✅ Analytics Access: Working\n   Total Tickets: ${analyticsData.total_tickets}\n   Open: ${analyticsData.open_tickets}\n   Resolved: ${analyticsData.resolved_tickets}\n\n`;
+                } else {
+                    result += `❌ Analytics Access: Failed\n\n`;
+                }
+
+                if (ticketsResponse.status === 403) {
+                    result += `✅ Support Endpoints: Correctly Denied (403)\n`;
+                } else {
+                    result += `❌ Support Endpoints: Access control failed\n`;
+                }
+
+                showResult(result, 'success');
+                
+            } catch (error) {
+                showResult(`❌ Error testing permissions: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSupportPermissions() {
+            if (!currentToken) {
+                showResult('❌ Please login first!', 'error');
+                return;
+            }
+
+            showResult('Testing support engineer permissions...', 'info');
+            
+            try {
+                // Test all tickets access
+                const ticketsResponse = await fetch('http://localhost:8000/tickets/all', {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                // Test ticket update
+                const updateResponse = await fetch('http://localhost:8000/ticket/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({
+                        ticket_id: 1,
+                        status: 'in_progress'
+                    })
+                });
+
+                let result = '📋 Support Engineer Permission Test Results:\n\n';
+                
+                if (ticketsResponse.ok) {
+                    const ticketsData = await ticketsResponse.json();
+                    result += `✅ All Tickets Access: Working\n   Found ${ticketsData.length} tickets\n\n`;
+                } else {
+                    result += `❌ All Tickets Access: Failed\n\n`;
+                }
+
+                if (updateResponse.ok || updateResponse.status === 404) {
+                    result += `✅ Ticket Update: Working (or ticket not found)\n\n`;
+                } else {
+                    result += `❌ Ticket Update: Failed\n\n`;
+                }
+
+                result += `🛠️ Support Engineer Capabilities:\n`;
+                result += `- View all tickets in system\n`;
+                result += `- Update ticket status\n`;
+                result += `- Assign tickets to engineers\n`;
+                result += `- Access all analytics\n`;
+                result += `- Full chat system access`;
+
+                showResult(result, 'success');
+                
+            } catch (error) {
+                showResult(`❌ Error testing permissions: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+            resultDiv.scrollTop = 0;
+        }
+
+        // Check if services are running on page load
+        window.onload = function() {
+            fetch('http://localhost:8000/health')
+                .then(response => response.json())
+                .then(data => {
+                    showResult(`🚀 System Status: ${data.status}\nService: ${data.service}\n\n✅ Ready for testing!`, 'success');
+                })
+                .catch(error => {
+                    showResult(`❌ System not running!\nPlease start services with: ./start_services.sh\n\nError: ${error.message}`, 'error');
+                });
+        };
+    </script>
+</body>
+</html>

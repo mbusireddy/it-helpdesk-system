@@ -1,0 +1,102 @@
+2025-05-24 18:04:36 | ERROR    | app.services.llm_service:generate_response:25 - Error generating response: model "qwen2:14b" not found, try pulling it first (status code: 404)
+2025-05-24 18:04:36 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': "I apologize, but I'm having trouble processing your request right now.", 'confidence': 0.8}
+2025-05-24 18:04:36 | ERROR    | app.services.llm_service:generate_embedding:36 - Error generating embedding: model "qwen2:14b" not found, try pulling it first (status code: 404)
+2025-05-24 18:14:41 | ERROR    | app.services.llm_service:generate_response:25 - Error generating response: model "qwen2:14b" not found, try pulling it first (status code: 404)
+2025-05-24 18:14:41 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': "I apologize, but I'm having trouble processing your request right now.", 'confidence': 0.8}
+2025-05-24 18:14:41 | ERROR    | app.services.llm_service:generate_embedding:36 - Error generating embedding: model "qwen2:14b" not found, try pulling it first (status code: 404)
+2025-05-24 18:15:28 | ERROR    | app.services.llm_service:generate_response:25 - Error generating response: model "qwen2:14b" not found, try pulling it first (status code: 404)
+2025-05-24 18:15:28 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': "I apologize, but I'm having trouble processing your request right now.", 'confidence': 0.8}
+2025-05-24 18:15:28 | ERROR    | app.services.llm_service:generate_embedding:36 - Error generating embedding: model "qwen2:14b" not found, try pulling it first (status code: 404)
+2025-05-24 18:16:53 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 1.0}
+2025-05-24 18:23:25 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-24 18:23:35 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 1.0}
+2025-05-24 18:27:12 | ERROR    | __main__:get_ticket_status:129 - Error getting ticket status: 
+2025-05-24 18:27:25 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-24 18:28:07 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 1.0}
+2025-05-24 18:28:29 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-24 18:29:03 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-24 18:29:25 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 1.0}
+2025-05-24 18:31:46 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 1.0}
+2025-05-24 18:42:39 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_0
+2025-05-24 18:42:40 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_1
+2025-05-24 18:42:40 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_2
+2025-05-24 18:42:40 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_3
+2025-05-24 18:42:41 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_4
+2025-05-24 18:42:41 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_5
+2025-05-24 18:42:41 | INFO     | app.services.vector_service:add_knowledge:36 - Added knowledge entry: IT_6
+2025-05-24 18:43:25 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.95}
+2025-05-24 18:44:03 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 1.0}
+2025-05-24 18:44:28 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-24 18:44:47 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-24 18:44:47 | INFO     | app.services.ticket_service:create_ticket:32 - Created ticket 1 for user test_user_1
+2025-05-24 18:45:01 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-24 18:46:53 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-24 18:48:02 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-24 18:48:48 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-24 18:48:48 | INFO     | app.services.ticket_service:create_ticket:32 - Created ticket 2 for user user_231af9b2
+2025-05-24 18:50:01 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 1.0}
+2025-05-24 18:51:36 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 1.0}
+2025-05-24 18:58:32 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 1.0}
+2025-05-25 14:00:35 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 0.8}
+2025-05-25 14:04:51 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 14:05:49 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 14:06:28 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 14:06:28 | INFO     | app.services.ticket_service:create_ticket:32 - Created ticket 3 for user user_39370a83
+2025-05-25 14:13:04 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 14:14:08 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 14:16:24 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 14:16:39 | ERROR    | __main__:get_ticket_status:131 - Error getting ticket status: 
+2025-05-25 14:17:09 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 14:49:23 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 15:02:59 | ERROR    | __main__:get_all_tickets:306 - Error getting all tickets: (sqlite3.OperationalError) no such column: tickets.assigned_to
+[SQL: SELECT tickets.id AS tickets_id, tickets.user_id AS tickets_user_id, tickets.assigned_to AS tickets_assigned_to, tickets.category AS tickets_category, tickets.title AS tickets_title, tickets.description AS tickets_description, tickets.priority AS tickets_priority, tickets.status AS tickets_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at, tickets.resolved_at AS tickets_resolved_at 
+FROM tickets]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-05-25 15:03:01 | ERROR    | __main__:update_ticket_status:280 - Error updating ticket: (sqlite3.OperationalError) no such column: tickets.assigned_to
+[SQL: SELECT tickets.id AS tickets_id, tickets.user_id AS tickets_user_id, tickets.assigned_to AS tickets_assigned_to, tickets.category AS tickets_category, tickets.title AS tickets_title, tickets.description AS tickets_description, tickets.priority AS tickets_priority, tickets.status AS tickets_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at, tickets.resolved_at AS tickets_resolved_at 
+FROM tickets 
+WHERE tickets.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-05-25 15:03:58 | INFO     | __main__:update_ticket_status:276 - Ticket 1 updated by support engineer support-engineer
+2025-05-25 15:04:42 | INFO     | __main__:update_ticket_status:276 - Ticket 1 updated by support engineer support-engineer
+2025-05-25 15:10:39 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 15:11:22 | INFO     | __main__:update_ticket_status:276 - Ticket 1 updated by support engineer support-engineer
+2025-05-25 15:21:04 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:21:04 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 0.8}
+2025-05-25 15:21:12 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:21:54 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:21:54 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 0.8}
+2025-05-25 15:21:55 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:22:12 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:22:12 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 0.8}
+2025-05-25 15:22:13 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:23:08 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:23:08 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 0.8}
+2025-05-25 15:23:09 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:23:20 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 15:26:56 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 15:26:59 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:26:59 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 0.8}
+2025-05-25 15:27:00 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:27:03 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 1.0}
+2025-05-25 15:29:12 | ERROR    | __main__:get_ticket_status:209 - Error getting ticket status: 
+2025-05-25 15:34:36 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 1.0}
+2025-05-25 15:35:13 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.85}
+2025-05-25 15:35:29 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 15:35:30 | INFO     | __main__:update_ticket_status:276 - Ticket 1 updated by support engineer support-engineer
+2025-05-25 15:39:06 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 15:45:47 | INFO     | app.main:update_ticket_status:276 - Ticket 1 updated by support engineer support-engineer
+2025-05-25 15:46:05 | INFO     | app.main:update_ticket_status:276 - Ticket 3 updated by support engineer support-engineer
+2025-05-25 15:46:11 | INFO     | app.main:update_ticket_status:276 - Ticket 2 updated by support engineer support-engineer
+2025-05-25 15:47:54 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 15:48:32 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 15:48:51 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 15:48:59 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'GENERAL', 'confidence': 1.0}
+2025-05-25 15:48:59 | INFO     | app.services.ticket_service:create_ticket:32 - Created ticket 4 for user appuser
+2025-05-25 15:49:30 | INFO     | app.main:update_ticket_status:276 - Ticket 4 updated by support engineer support-engineer
+2025-05-25 15:52:38 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_HARDWARE', 'confidence': 1.0}
+2025-05-25 15:56:04 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
+2025-05-25 15:56:04 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'HR', 'confidence': 0.8}
+2025-05-25 15:56:04 | INFO     | app.agents.classifier_agent:classify_query:14 - Classified message as: {'category': 'IT_SOFTWARE', 'confidence': 0.9}
