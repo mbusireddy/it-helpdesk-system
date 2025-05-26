@@ -3,7 +3,11 @@ version: '3.8'
 services:
   # Main application
   helpdesk-api:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: helpdesk-api
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
@@ -11,56 +15,104 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
       - OLLAMA_MODEL=qwen2:14b
       - CHROMA_PERSIST_DIRECTORY=./chroma_db
+      - PYTHONPATH=/app
     volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
-      - ./chroma_db:/app/chroma_db
+      - ./data:/app/data:rw
+      - ./logs:/app/logs:rw
+      - ./chroma_db:/app/chroma_db:rw
+      - ./helpdesk.db:/app/helpdesk.db:rw
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
     networks:
       - helpdesk-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Streamlit UI
   helpdesk-ui:
-    build: .
-    command: streamlit run app/ui/chat_interface.py --server.port=8501 --server.address=0.0.0.0
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: helpdesk-ui
+    restart: unless-stopped
+    command: streamlit run app/ui/chat_interface.py --server.port=8501 --server.address=0.0.0.0 --server.headless=true
     ports:
       - "8501:8501"
     environment:
       - API_BASE=http://helpdesk-api:8000
+      - PYTHONPATH=/app
     depends_on:
-      - helpdesk-api
+      helpdesk-api:
+        condition: service_healthy
     networks:
       - helpdesk-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Dashboard
   helpdesk-dashboard:
-    build: .
-    command: streamlit run app/ui/dashboard.py --server.port=8502 --server.address=0.0.0.0
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: helpdesk-dashboard
+    restart: unless-stopped
+    command: streamlit run app/ui/dashboard.py --server.port=8502 --server.address=0.0.0.0 --server.headless=true
     ports:
       - "8502:8502"
     environment:
       - API_BASE=http://helpdesk-api:8000
+      - PYTHONPATH=/app
     depends_on:
-      - helpdesk-api
+      helpdesk-api:
+        condition: service_healthy
     networks:
       - helpdesk-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8502/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Ollama service
   ollama:
     image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
+      - ollama_data:/root/.ollama:rw
     environment:
       - OLLAMA_ORIGINS=*
+      - OLLAMA_HOST=0.0.0.0
     networks:
       - helpdesk-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          memory: 4G
 
 volumes:
   ollama_data:
+    driver: local
 
 networks:
   helpdesk-network:
     driver: bridge
+    name: helpdesk-network
