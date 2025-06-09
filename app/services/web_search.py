@@ -1,3 +1,5 @@
+# Import necessary types and Utilities
+
 import requests
 from bs4 import BeautifulSoup
 from typing import List, Dict
