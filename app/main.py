@@ -11,8 +11,10 @@ from app.models.database import get_db, Ticket, User, SessionLocal
 from app.utils.logger import logger
 from datetime import datetime
 
+# Initialize FastAPI app with basic metadata
 app = FastAPI(title="IT Helpdesk System", version="1.0.0")
 
+# Enable CORS for all origins, methods, and headers (for development; tighten for production)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,24 +23,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Pydantic models for request/response validation and serialization
 
-# Pydantic models
 class LoginRequest(BaseModel):
     username: str
     password: str
-
 
 class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     user: dict
 
-
 class ChatMessage(BaseModel):
     content: str
     user_id: str
     session_id: Optional[str] = None
-
 
 class ChatResponse(BaseModel):
     response: str
@@ -46,16 +45,13 @@ class ChatResponse(BaseModel):
     agent: str
     ticket_id: Optional[int] = None
 
-
 class TicketStatusRequest(BaseModel):
     ticket_id: int
-
 
 class TicketUpdateRequest(BaseModel):
     ticket_id: int
     status: str
     assigned_to: Optional[str] = None
-
 
 class TicketResponse(BaseModel):
     id: int
@@ -67,37 +63,35 @@ class TicketResponse(BaseModel):
     updated_at: str
     assigned_to: Optional[str] = None
 
-
-# Security
+# Security setup: HTTP Bearer token scheme for authentication
 security = HTTPBearer()
 
-# Authentication dependency
+# Dependency to get current user from Bearer token, validate token, and fetch user from DB
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> User:
     token = credentials.credentials
-    payload = auth_service.verify_token(token)
+    payload = auth_service.verify_token(token)  # Validate JWT token
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid authentication token")
     
-    user = auth_service.get_user_by_username(payload.get("sub"))
+    user = auth_service.get_user_by_username(payload.get("sub"))  # Get user by username from token payload
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     
     return user
 
-# Support engineer dependency
+# Dependency to ensure user has support engineer privileges
 async def get_support_engineer(current_user: User = Depends(get_current_user)) -> User:
     if not auth_service.is_support_engineer(current_user):
         raise HTTPException(status_code=403, detail="Support engineer access required")
     return current_user
 
-# In-memory storage for sessions (replace with Redis in production)
+# In-memory dictionary to track active chat sessions (replace with Redis for production)
 active_sessions = {}
 
-
-# Authentication endpoints
+# User login endpoint - authenticates user and returns JWT token
 @app.post("/login", response_model=LoginResponse)
 async def login(login_request: LoginRequest):
-    """Login endpoint for user authentication"""
+    """Authenticate user and return access token"""
     user_data = auth_service.authenticate_user(login_request.username, login_request.password)
     if not user_data:
         raise HTTPException(status_code=401, detail="Invalid username or password")
@@ -115,10 +109,10 @@ async def login(login_request: LoginRequest):
         }
     )
 
-
+# Get current authenticated user's profile info
 @app.get("/me")
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
-    """Get current user information"""
+    """Fetch profile details of the logged-in user"""
     return {
         "username": current_user.username,
         "full_name": current_user.full_name,
@@ -127,13 +121,14 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
         "last_login": current_user.last_login.isoformat() if current_user.last_login else None
     }
 
-
+# Chat endpoint - handles user messages, manages session state, and invokes helpdesk workflow
 @app.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(message: ChatMessage):
     try:
+        # Use existing session_id or generate a new one for chat context
         session_id = message.session_id or str(uuid.uuid4())
 
-        # Initialize or get existing session state
+        # Initialize session state if new session
         if session_id not in active_sessions:
             initial_state: HelpDeskState = {
                 "messages": [],
@@ -151,31 +146,33 @@ async def chat_endpoint(message: ChatMessage):
 
         state = active_sessions[session_id]
 
-        # Add user message to state
+        # Add user's message to conversation state
         state["messages"].append({
             "role": "user",
             "content": message.content
         })
 
-        # Process through workflow
+        # Process the message through the AI-powered helpdesk workflow
         result = await helpdesk_workflow.workflow.ainvoke(state)
 
-        # Update session state
+        # Update session state with workflow output
         active_sessions[session_id] = result
 
-        # Get the last assistant message
+        # Extract last assistant response message
         last_response = None
         for msg in reversed(result["messages"]):
             if msg["role"] == "assistant":
                 last_response = msg
                 break
 
+        # Default response if assistant has no reply
         if not last_response:
             last_response = {
                 "content": "I'm here to help! How can I assist you today?",
                 "agent": "system"
             }
 
+        # Return chat response with session context and optional ticket info
         return ChatResponse(
             response=last_response["content"],
             session_id=session_id,
@@ -187,7 +184,7 @@ async def chat_endpoint(message: ChatMessage):
         logger.error(f"Error in chat endpoint: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# Endpoint to get status/details of a specific ticket by ticket ID
 @app.post("/ticket/status", response_model=TicketResponse)
 async def get_ticket_status(request: TicketStatusRequest):
     try:
@@ -195,6 +192,7 @@ async def get_ticket_status(request: TicketStatusRequest):
         if not ticket:
             raise HTTPException(status_code=404, detail="Ticket not found")
 
+        # Serialize ticket data for response
         return TicketResponse(
             id=ticket.id,
             status=ticket.status,
@@ -209,11 +207,12 @@ async def get_ticket_status(request: TicketStatusRequest):
         logger.error(f"Error getting ticket status: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# Get all tickets raised by a specific user
 @app.get("/tickets/user/{user_id}")
 async def get_user_tickets(user_id: str):
     try:
         tickets = ticket_service.get_user_tickets(user_id)
+        # Return list of tickets with details
         return [
             TicketResponse(
                 id=ticket.id,
@@ -231,13 +230,13 @@ async def get_user_tickets(user_id: str):
         logger.error(f"Error getting user tickets: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# Support engineer only: Update ticket status and optionally assign engineer
 @app.put("/ticket/update", response_model=TicketResponse)
 async def update_ticket_status(
     request: TicketUpdateRequest, 
     support_engineer: User = Depends(get_support_engineer)
 ):
-    """Update ticket status - Support Engineer only"""
+    """Update status and assignment of a ticket - only support engineers allowed"""
     try:
         db = SessionLocal()
         ticket = db.query(Ticket).filter(Ticket.id == request.ticket_id).first()
@@ -246,7 +245,7 @@ async def update_ticket_status(
             db.close()
             raise HTTPException(status_code=404, detail="Ticket not found")
         
-        # Update ticket fields
+        # Update ticket status and assignment
         ticket.status = request.status
         if request.assigned_to:
             ticket.assigned_to = request.assigned_to
@@ -255,12 +254,13 @@ async def update_ticket_status(
         
         ticket.updated_at = datetime.utcnow()
         
-        # Set resolved_at if status is resolved
+        # Mark resolved_at timestamp if ticket is resolved
         if request.status.lower() == "resolved":
             ticket.resolved_at = datetime.utcnow()
         
         db.commit()
         
+        # Prepare response model
         result = TicketResponse(
             id=ticket.id,
             status=ticket.status,
@@ -280,15 +280,16 @@ async def update_ticket_status(
         logger.error(f"Error updating ticket: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# Support engineer only: Fetch all tickets in the system
 @app.get("/tickets/all")
 async def get_all_tickets(support_engineer: User = Depends(get_support_engineer)):
-    """Get all tickets - Support Engineer only"""
+    """Retrieve all tickets - support engineers only"""
     try:
         db = SessionLocal()
         tickets = db.query(Ticket).all()
         db.close()
         
+        # Return list of all tickets with details
         return [
             TicketResponse(
                 id=ticket.id,
@@ -306,7 +307,7 @@ async def get_all_tickets(support_engineer: User = Depends(get_support_engineer)
         logger.error(f"Error getting all tickets: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# Analytics dashboard endpoint to provide summary statistics on tickets
 @app.get("/analytics/dashboard")
 async def get_dashboard_analytics():
     try:
@@ -315,12 +316,12 @@ async def get_dashboard_analytics():
 
         db = SessionLocal()
 
-        # Basic analytics
+        # Count total, open, and resolved tickets
         total_tickets = db.query(Ticket).count()
         open_tickets = db.query(Ticket).filter(Ticket.status == 'open').count()
         resolved_tickets = db.query(Ticket).filter(Ticket.status == 'resolved').count()
 
-        # Category breakdown
+        # Group tickets by category and count them
         category_stats = db.query(
             Ticket.category,
             func.count(Ticket.id).label('count')
@@ -328,6 +329,7 @@ async def get_dashboard_analytics():
 
         db.close()
 
+        # Calculate resolution rate and format category data
         return {
             "total_tickets": total_tickets,
             "open_tickets": open_tickets,
@@ -342,14 +344,14 @@ async def get_dashboard_analytics():
         logger.error(f"Error getting analytics: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+# Simple health check endpoint to verify service status
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "IT Helpdesk System"}
 
 
+# Run app with Uvicorn if executed as main program
 if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
-    
