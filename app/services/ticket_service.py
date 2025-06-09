@@ -1,3 +1,5 @@
+# Import necessary types and Utilities
+
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 from app.models.database import Ticket, ChatLog, get_db  # Importing ORM models and DB session generator
